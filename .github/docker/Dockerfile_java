@@ -21,9 +21,9 @@ ARG JAR_FILE=/build/target/*.jar
 
 WORKDIR /app
 
-COPY --from=MAVEN_BUILD  ${JAR_FILE} ${WORKDIR}/${ARTIFACT_NAME}
+COPY --from=maven_build  /build/target/*.jar /app/spring-boot.jar
 
 #expose port 8080
 EXPOSE $SERVER_PORT
 
-ENTRYPOINT ["java", "-jar", "spring-boot.jar"]
+ENTRYPOINT ["java", "-jar", "/app/spring-boot.jar"]
