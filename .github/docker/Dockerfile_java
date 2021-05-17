@@ -1,29 +1,14 @@
-# Maven build container 
-
 FROM maven:3.6.3-openjdk-11 AS maven_build
-
 COPY pom.xml /build/
-
 COPY src /build/src/
-
 WORKDIR /build/
-
 RUN mvn package
 
-#pull base image
-
 FROM openjdk
-
 ENV SERVER_PORT=8080
-
 ENV ARTIFACT_NAME spring-boot.jar
 ARG JAR_FILE=/build/target/*.jar
-
 WORKDIR /app
-
 COPY --from=maven_build  /build/target/*.jar /app/spring-boot.jar
-
-#expose port 8080
 EXPOSE $SERVER_PORT
-
 ENTRYPOINT ["java", "-jar", "/app/spring-boot.jar"]
