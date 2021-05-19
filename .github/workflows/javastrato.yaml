@@ -21,8 +21,8 @@ jobs:
       AZURE_ACR_NAME_PREFIX: 'almacr'
       AZURE_ACR_SKU: 'Standard'
       AZURE_ACR_ADMIN_ENABLED: true
-	    STRATOSPHERE_API_URL: https://api.live.external.byp.ai
-	    PROJECT_NAME: alm
+      STRATOSPHERE_API_URL: https://api.live.external.byp.ai
+      PROJECT_NAME: alm
       REGION: us
       OWNER_GROUP_NAME : 'grp-sec-saas-sub-lplat-test-reader'
     steps:
