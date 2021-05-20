@@ -11,4 +11,5 @@ ARG JAR_FILE=/build/target/*.jar
 WORKDIR /app
 COPY --from=maven_build  /build/target/*.jar /app/spring-boot.jar
 EXPOSE $SERVER_PORT
+USER 1
 ENTRYPOINT ["java", "-jar", "/app/spring-boot.jar"]
