@@ -5,14 +5,13 @@ WORKDIR /build/
 RUN mvn package
 
 FROM openjdk
-RUN useradd -rm -d /home/ubuntu -s /bin/bash -g root -G sudo -u 1001 ubuntu
+RUN sudo useradd -rm -d /home/ubuntu -s /bin/bash -g root -G sudo -u 1001 ubuntu
 USER ubuntu
-WORKDIR /home/ubuntu
+WORKDIR /home/ubuntu/
 ENV SERVER_PORT=8080
 ENV ARTIFACT_NAME spring-boot.jar
 ARG JAR_FILE=/build/target/*.jar
-WORKDIR /home/ubuntu
+WORKDIR /home/ubuntu/
 COPY --from=maven_build  /build/target/*.jar /home/ubuntu/spring-boot.jar
 EXPOSE $SERVER_PORT
-USER userjava
 ENTRYPOINT ["java", "-jar", "/home/ubuntu/spring-boot.jar"]
