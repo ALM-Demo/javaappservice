@@ -12,9 +12,9 @@ jobs:
       AZURE_RESOURCE_GROUP: ''
       AZURE_DEPLOY_ENVIRONMENT: 'dev'
       AZURE_WEB_APP_TYPE: 'java'
-      AZURE_CLIENT_ID: 'stratosphere-alm'
-      AZURE_CLIENT_SECRET: 'ExKpTP1uRSP2B9Lkp2gN'
-      AZURE_TENANT_ID: ''
+      AZURE_CLIENT_ID: 'b81c1a0e-887e-42ba-a1db-e3a5bbb6ce93'
+      AZURE_CLIENT_SECRET: 'W7eVgVLXNSw3O7ippoNh'
+      AZURE_TENANT_ID: 'c9536685-1262-420b-a94b-4f5420284680'
       AZURE_WEB_APP_NAME_PREFIX: 'alm-app'
       AZURE_WEB_APP_SKU: 'S1'
       AZURE_WEB_APP_WORKERS: '4'
@@ -31,15 +31,15 @@ jobs:
         echo "AZURE_WEB_APP_SVC_PLAN=${AZURE_WEB_APP_NAME_PREFIX}-${AZURE_WEB_APP_TYPE}-${AZURE_DEPLOY_ENVIRONMENT}" >> $GITHUB_ENV
         echo "AZURE_WEB_APP_NAME1=${AZURE_WEB_APP_NAME_PREFIX}-${AZURE_WEB_APP_TYPE}-${GITHUB_REPO_NAME}-${AZURE_DEPLOY_ENVIRONMENT}" >> $GITHUB_ENV
         echo "AZURE_WEB_APP_NAME=${GITHUB_REPO_NAME}-${AZURE_DEPLOY_ENVIRONMENT}" >> $GITHUB_ENV
-        echo "AZURE_ACR_NAME=${AZURE_ACR_NAME_PREFIX}${AZURE_DEPLOY_ENVIRONMENT}" >> $GITHUB_ENV
+        echo "AZURE_ACR_NAME1=${AZURE_ACR_NAME_PREFIX}${AZURE_DEPLOY_ENVIRONMENT}" >> $GITHUB_ENV
         echo "AZURE_WEB_APP_IMAGE_NAME=${GITHUB_REPO_NAME}-${AZURE_DEPLOY_ENVIRONMENT}" >> $GITHUB_ENV
     
     - name: Checkout Code
       uses: actions/checkout@v2
 
-#     - name: Login to Azure
-#       run: |
-#         az login --service-principal --username $AZURE_CLIENT_ID --password $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID
+    - name: Login to Azure
+      run: |
+        az login --service-principal --username $AZURE_CLIENT_ID --password $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID
         
     - name: Create Azure Container Registry
       run: |
@@ -48,7 +48,8 @@ jobs:
           -H "Authorization: Bearer ${{ secrets.ST_TOKEN }}" \
           --request PUT \
           --data '{"spec": {"container_registry": {"access_policies": [{"name": '\"${{env.OWNER_GROUP_NAME }}\"', "type": "group"}]}}}' \
-          ${{ env.STRATOSPHERE_API_URL }}/geographies/${{ env.GEOGRAPHY }}/projects/${{ env.PROJECT_NAME }}/resources/azure-container-registry/${{ env.AZURE_ACR_NAME }}
+          ${{ env.STRATOSPHERE_API_URL }}/geographies/${{ env.GEOGRAPHY }}/projects/${{ env.PROJECT_NAME }}/resources/azure-container-registry/${{ env.AZURE_ACR_NAME1 }} > temp.json
+        echo "AZURE_ACR_NAME=($(jq '.status.azure.resource_name' temp.json))" >> $GITHUB_ENV
     
     - name: Get Timestamp
       id: time
@@ -63,21 +64,21 @@ jobs:
       run: |
         docker tag $AZURE_ACR_NAME.azurecr.io/$AZURE_WEB_APP_IMAGE_NAME:$AZURE_WEB_APP_IMAGE_TAG $AZURE_ACR_NAME.azurecr.io/$AZURE_WEB_APP_IMAGE_NAME:latest
         
-#     - name: Login to ACR
-#       run: |
-#         az acr login --name $AZURE_ACR_NAME
-
-#     - name: Push Docker Images
-#       run: |
-#         docker push "$AZURE_ACR_NAME.azurecr.io/$AZURE_WEB_APP_IMAGE_NAME:$AZURE_WEB_APP_IMAGE_TAG"
-#         docker push "$AZURE_ACR_NAME.azurecr.io/$AZURE_WEB_APP_IMAGE_NAME:latest"
-
-    - name: Create Azure Web App
+    - name: Login to ACR
       run: |
-        curl -H "accept: application/json" \
-          -H "Content-Type: application/json" \
-          -H "Authorization: Bearer ${{ secrets.ST_TOKEN }}" \
-          --request PUT \
-          --data '{"spec": {"enabled": true,"image": '\"${{ env.AZURE_ACR_NAME }}.azurecr.io/${{ env.AZURE_WEB_APP_IMAGE_NAME }}\"',"network": {"access": "external"},"authentication": {"enabled": true}}}' \
-          ${{ env.STRATOSPHERE_API_URL }}/geographies/${{ env.GEOGRAPHY }}/projects/${{ env.PROJECT_NAME }}/resources/container-web/${{ env.AZURE_WEB_APP_NAME }}
+        az acr login --name $AZURE_ACR_NAME
+
+    - name: Push Docker Images
+      run: |
+        docker push "$AZURE_ACR_NAME.azurecr.io/$AZURE_WEB_APP_IMAGE_NAME:$AZURE_WEB_APP_IMAGE_TAG"
+        docker push "$AZURE_ACR_NAME.azurecr.io/$AZURE_WEB_APP_IMAGE_NAME:latest"
+
+#     - name: Create Azure Web App
+#       run: |
+#         curl -H "accept: application/json" \
+#           -H "Content-Type: application/json" \
+#           -H "Authorization: Bearer ${{ secrets.ST_TOKEN }}" \
+#           --request PUT \
+#           --data '{"spec": {"enabled": true,"image": '\"${{ env.AZURE_ACR_NAME }}.azurecr.io/${{ env.AZURE_WEB_APP_IMAGE_NAME }}\"',"network": {"access": "external"},"authentication": {"enabled": true}}}' \
+#           ${{ env.STRATOSPHERE_API_URL }}/geographies/${{ env.GEOGRAPHY }}/projects/${{ env.PROJECT_NAME }}/resources/container-web/${{ env.AZURE_WEB_APP_NAME }}
         
