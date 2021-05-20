@@ -8,13 +8,13 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GITHUB_REPO_NAME: 'javaappservice'
-      AZURE_SUBSCRIPTION: 'test'
-      AZURE_RESOURCE_GROUP: 'test'
+      AZURE_SUBSCRIPTION: ''
+      AZURE_RESOURCE_GROUP: ''
       AZURE_DEPLOY_ENVIRONMENT: 'dev'
       AZURE_WEB_APP_TYPE: 'java'
       AZURE_CLIENT_ID: 'stratosphere-alm'
       AZURE_CLIENT_SECRET: 'ExKpTP1uRSP2B9Lkp2gN'
-      AZURE_TENANT_ID: 'test'
+      AZURE_TENANT_ID: ''
       AZURE_WEB_APP_NAME_PREFIX: 'alm-app'
       AZURE_WEB_APP_SKU: 'S1'
       AZURE_WEB_APP_WORKERS: '4'
@@ -23,7 +23,7 @@ jobs:
       AZURE_ACR_ADMIN_ENABLED: true
       STRATOSPHERE_API_URL: https://api.live.external.byp.ai
       PROJECT_NAME: alm
-      REGION: us
+      GEOGRAPHY: us
       OWNER_GROUP_NAME : 'grp-sec-saas-sub-lplat-test-reader'
     steps:
     - name: Set env
@@ -48,7 +48,7 @@ jobs:
           -H "Authorization: Bearer ${{ secrets.ST_TOKEN }}" \
           --request PUT \
           --data '{"spec": {"container_registry": {"access_policies": [{"name": '\"${{env.OWNER_GROUP_NAME }}\"', "type": "group"}]}}}' \
-          ${{ env.STRATOSPHERE_API_URL }}/geographies/${{ env.REGION }}/projects/${{ env.PROJECT_NAME }}/resources/azure-container-registry/${{ env.AZURE_ACR_NAME }}
+          ${{ env.STRATOSPHERE_API_URL }}/geographies/${{ env.GEOGRAPHY }}/projects/${{ env.PROJECT_NAME }}/resources/azure-container-registry/${{ env.AZURE_ACR_NAME }}
     
     - name: Get Timestamp
       id: time
@@ -79,5 +79,5 @@ jobs:
           -H "Authorization: Bearer ${{ secrets.ST_TOKEN }}" \
           --request PUT \
           --data '{"spec": {"enabled": true,"image": '\"${{ env.AZURE_ACR_NAME }}.azurecr.io/${{ env.AZURE_WEB_APP_IMAGE_NAME }}\"',"network": {"access": "external"},"authentication": {"enabled": true}}}' \
-          ${{ env.STRATOSPHERE_API_URL }}/geographies/${{ env.REGION }}/projects/${{ env.PROJECT_NAME }}/resources/container-web/${{ env.AZURE_WEB_APP_NAME }}
+          ${{ env.STRATOSPHERE_API_URL }}/geographies/${{ env.GEOGRAPHY }}/projects/${{ env.PROJECT_NAME }}/resources/container-web/${{ env.AZURE_WEB_APP_NAME }}
         
