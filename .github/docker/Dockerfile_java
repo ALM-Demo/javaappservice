@@ -5,13 +5,14 @@ WORKDIR /build/
 RUN mvn package
 
 FROM openjdk
-RUN addgroup -g 1000 -S userjava && \
-    adduser -u 1000 -S userjava -G userjava
+RUN useradd -rm -d /home/ubuntu -s /bin/bash -g root -G sudo -u 1001 ubuntu
+USER ubuntu
+WORKDIR /home/ubuntu
 ENV SERVER_PORT=8080
 ENV ARTIFACT_NAME spring-boot.jar
 ARG JAR_FILE=/build/target/*.jar
-WORKDIR /app
-COPY --from=maven_build  /build/target/*.jar /app/spring-boot.jar
+WORKDIR /home/ubuntu
+COPY --from=maven_build  /build/target/*.jar /home/ubuntu/spring-boot.jar
 EXPOSE $SERVER_PORT
 USER userjava
-ENTRYPOINT ["java", "-jar", "/app/spring-boot.jar"]
+ENTRYPOINT ["java", "-jar", "/home/ubuntu/spring-boot.jar"]
