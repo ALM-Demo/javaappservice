@@ -5,27 +5,13 @@ WORKDIR /build/
 RUN mvn package
 
 FROM openjdk
-ARG user=javauser
-ARG group=javauser
-ARG uid=1000
-ARG gid=1000
-RUN addgroup -g ${gid} ${group} \
-  && adduser -u ${uid} -G ${group} -s /bin/sh -D ${user}
-
-RUN groupadd -r ${gid} && -G ${group} -r -g ${gid} ${group} 
-
-RUN groupadd -r appuser && useradd -r -g appuser appuser 
-
-RUN groupadd -r -g ${gid} ${group} && useradd -D ${user} -r -u ${uid} -G ${group}
-
-
-RUN addgroup ${gid} GROUP && \
-    adduser -u ${uid} --group ${gid} GROUP
+RUN addgroup -g 1000 -S userjava && \
+    adduser -u 1000 -S userjava -G userjava
 ENV SERVER_PORT=8080
 ENV ARTIFACT_NAME spring-boot.jar
 ARG JAR_FILE=/build/target/*.jar
 WORKDIR /app
 COPY --from=maven_build  /build/target/*.jar /app/spring-boot.jar
 EXPOSE $SERVER_PORT
-USER ${user}
+USER userjava
 ENTRYPOINT ["java", "-jar", "/app/spring-boot.jar"]
