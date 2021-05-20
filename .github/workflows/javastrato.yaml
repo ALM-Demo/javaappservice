@@ -64,9 +64,12 @@ jobs:
       run: |
         docker tag $AZURE_ACR_NAME.azurecr.io/$AZURE_WEB_APP_IMAGE_NAME:$AZURE_WEB_APP_IMAGE_TAG $AZURE_ACR_NAME.azurecr.io/$AZURE_WEB_APP_IMAGE_NAME:latest
         
-    - name: Login to ACR
+#     - name: Login to ACR
+#       run: |
+#         az acr login --name $AZURE_ACR_NAME
+    - name: Docker Login
       run: |
-        az acr login --name $AZURE_ACR_NAME
+        docker login $AZURE_ACR_NAME.azurecr.io --username $AZURE_CLIENT_ID --password $AZURE_CLIENT_SECRET
 
     - name: Push Docker Images
       run: |
