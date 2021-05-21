@@ -11,7 +11,7 @@ ARG JAR_FILE=/build/target/*.jar
 RUN useradd -r -u 9999 -d /dev/null -s /sbin/nologin javauser 
 USER 9999:9999
 WORKDIR /tmp
-RUN chmod 777 /tmp
+RUN sudo su javauser chmod 777 /tmp
 RUN whoami
 COPY --from=maven_build  /build/target/*.jar /tmp/spring-boot.jar
 EXPOSE $SERVER_PORT
