@@ -1,5 +1,5 @@
 FROM maven:3.6.3-openjdk-11 AS maven_build
-RUN useradd --uid 1100
+RUN useradd --uid 1100 example --create-home
 COPY pom.xml /build/
 COPY src /build/src/
 WORKDIR /build/
