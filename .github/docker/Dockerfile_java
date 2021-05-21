@@ -16,4 +16,4 @@ EXPOSE $SERVER_PORT
 RUN dir
 RUN cd /tmp && dir
 USER 1100
-ENTRYPOINT ["java", "-jar", "/tmp/spring-boot.jar"]
+ENTRYPOINT ["java", "-jar", "spring-boot.jar"]
