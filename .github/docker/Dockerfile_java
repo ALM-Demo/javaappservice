@@ -13,6 +13,5 @@ USER 9999:9999
 WORKDIR /tmp
 COPY --from=maven_build  /build/target/*.jar /tmp/spring-boot.jar
 EXPOSE $SERVER_PORT
-RUN chown -R admin:admin /tmp
 USER admin
 ENTRYPOINT ["java", "-jar", "/tmp/spring-boot.jar"]
