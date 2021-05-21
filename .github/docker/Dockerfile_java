@@ -1,4 +1,5 @@
 FROM maven:3.6.3-openjdk-11 AS maven_build
+RUN useradd −u 8877 nonroot
 COPY pom.xml /build/
 COPY src /build/src/
 WORKDIR /build/
@@ -8,9 +9,8 @@ FROM openjdk
 ENV SERVER_PORT=8080
 ENV ARTIFACT_NAME spring-boot.jar
 ARG JAR_FILE=/build/target/*.jar
-RUN useradd -ms /bin/bash admin
 WORKDIR /tmp
 COPY --from=maven_build  /build/target/*.jar /tmp/spring-boot.jar
 EXPOSE $SERVER_PORT
-USER 999
+USER nonroot
 ENTRYPOINT ["java", "-jar", "/tmp/spring-boot.jar"]
