@@ -1,17 +1,16 @@
 FROM maven:3.6.3-openjdk-11 AS maven_build
-RUN useradd --uid 1100 example --create-home
 COPY pom.xml /build/
 COPY src /build/src/
 WORKDIR /build/
 RUN mvn package
 
 FROM openjdk
-RUN chown -R 1100:javauser /tmp
+RUN chown -R 1100 /tmp
 ENV SERVER_PORT=8080
 ENV ARTIFACT_NAME spring-boot.jar
 ARG JAR_FILE=/build/target/*.jar
 WORKDIR /tmp
 USER 1100
-COPY --from=maven_build  /build/target/*.jar /tmp/spring-boot.jar
+COPY --chown=1100 --from=maven_build  /build/target/*.jar /tmp/spring-boot.jar
 EXPOSE $SERVER_PORT
 ENTRYPOINT ["java", "-jar", "/tmp/spring-boot.jar"]
