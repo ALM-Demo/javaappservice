@@ -6,7 +6,7 @@ WORKDIR /build/
 RUN mvn package
 
 FROM openjdk
-chown -R 1100:javauser /tmp
+RUN chown -R 1100:javauser /tmp
 ENV SERVER_PORT=8080
 ENV ARTIFACT_NAME spring-boot.jar
 ARG JAR_FILE=/build/target/*.jar
