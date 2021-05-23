@@ -7,7 +7,7 @@ USER root
 RUN chmod -R 777 /build
 
 FROM openjdk
-RUN mkdir -p /tmp/app
+RUN mkdir -p /tmp
 RUN groupadd -g 1010 javagroup
 RUN useradd -u 1500 javauser
 RUN usermod -a -G javagroup javauser
