@@ -15,8 +15,8 @@ RUN chown -R 1010:javagroup /tmp/app
 ENV SERVER_PORT=8080
 ENV ARTIFACT_NAME spring-boot.jar
 ARG JAR_FILE=/build/target/*.jar
-WORKDIR /tmp/app
+WORKDIR /tmp
 USER 1010
-COPY --chown=1010:javagroup --from=maven_build  /build/target/*.jar /tmp/app/spring-boot.jar
+COPY --chown=1010:javagroup --from=maven_build  /build/target/*.jar /tmp/spring-boot.jar
 EXPOSE $SERVER_PORT
-CMD java -jar /tmp/app/spring-boot.jar
+CMD java -jar spring-boot.jar
