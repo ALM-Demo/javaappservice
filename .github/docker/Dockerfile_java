@@ -6,12 +6,15 @@ RUN mvn package
 
 FROM openjdk
 RUN mkdir -p /tmp/app
-RUN chown -R 1100:1200 /tmp/app
+RUN groupadd -g 1010 javagroup
+RUN useradd -u 1500 javauser
+RUN usermod -a -G javagroup javauser
+RUN chown -R 1010:javagroup /tmp/app
 ENV SERVER_PORT=8080
 ENV ARTIFACT_NAME spring-boot.jar
 ARG JAR_FILE=/build/target/*.jar
 WORKDIR /tmp/app
-USER 1100
-COPY --chown=1100:1200 --from=maven_build  /build/target/*.jar spring-boot.jar
+USER 1010
+COPY --chown=1010:javagroup --from=maven_build  /build/target/*.jar spring-boot.jar
 EXPOSE $SERVER_PORT
 CMD java -jar spring-boot.jar
