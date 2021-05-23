@@ -3,20 +3,15 @@ COPY pom.xml /build/
 COPY src /build/src/
 WORKDIR /build/
 RUN mvn package
-USER root
 RUN chmod -R u+x /build/target/*.jar
 
 FROM openjdk
-RUN mkdir -p /tmp
-RUN groupadd -g 1210 javagroup
-RUN useradd -u 1500 javauser
-RUN usermod -a -G javagroup javauser
+RUN chown -R 1100:1100 /tmp
 ENV SERVER_PORT=8080
 ENV ARTIFACT_NAME spring-boot.jar
 ARG JAR_FILE=/build/target/*.jar
-RUN chown -R 1210:javagroup /tmp
 WORKDIR /tmp
-USER 1010
-COPY --chown=1210:javagroup --from=maven_build  /build/target/*.jar /tmp/spring-boot.jar
+USER 1100
+COPY --chown=1100:1100 --from=maven_build  /build/target/*.jar /tmp/spring-boot.jar
 EXPOSE $SERVER_PORT
-ENTRYPOINT ["java","-jar","/tmp/spring-boot.jar"] USER 1210
+ENTRYPOINT ["java", "-jar", "/tmp/spring-boot.jar"]
