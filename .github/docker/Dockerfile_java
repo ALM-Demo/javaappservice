@@ -3,6 +3,8 @@ COPY pom.xml /build/
 COPY src /build/src/
 WORKDIR /build/
 RUN mvn package
+USER root
+RUN chmod -R 777 /build
 
 FROM openjdk
 RUN mkdir -p /tmp/app
@@ -15,6 +17,6 @@ ENV ARTIFACT_NAME spring-boot.jar
 ARG JAR_FILE=/build/target/*.jar
 WORKDIR /tmp/app
 USER 1010
-COPY --chown=1010:javagroup --from=maven_build  /build/target/*.jar spring-boot.jar
+COPY --chown=1010:javagroup --from=maven_build  /build/target/*.jar /tmp/app/spring-boot.jar
 EXPOSE $SERVER_PORT
-CMD java -jar spring-boot.jar
+CMD java -jar /tmp/app/spring-boot.jar
