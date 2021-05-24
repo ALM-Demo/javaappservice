@@ -1,8 +1,12 @@
 FROM maven:3.6.3-openjdk-11 AS maven_build
+RUN mkdir -p /build
 COPY pom.xml /build/
 COPY src /build/src/
 WORKDIR /build/
 RUN mvn package
+RUN chmod 777 /build/target/*.jar
+RUN useradd --uid 1100 javause --create-home
+USER 1100
 
 FROM openjdk
 RUN useradd --uid 1100 javause --create-home
@@ -13,4 +17,5 @@ WORKDIR /tmp
 USER 1100
 COPY --chown=1000:1000 --from=maven_build  /build/target/*.jar /tmp/spring-boot.jar
 EXPOSE $SERVER_PORT
+USER 1100
 ENTRYPOINT ["java", "-jar", "/tmp/spring-boot.jar"]
