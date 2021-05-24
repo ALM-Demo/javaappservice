@@ -3,7 +3,7 @@ RUN mkdir -p /build
 COPY pom.xml /build/
 COPY src /build/src/
 WORKDIR /build/
-RUN mvn package
+RUN mvn clean package
 RUN chmod 777 /build/target/*.jar
 RUN useradd --uid 1100 javause --create-home
 USER 1100
