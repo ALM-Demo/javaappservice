@@ -3,15 +3,15 @@ COPY pom.xml /build/
 COPY src /build/src/
 WORKDIR /build/
 RUN mvn package
-RUN chmod -R u+x /build/target/*.jar
 
 FROM openjdk
-RUN chown -R 1100:1100 /tmp
+RUN groupadd -g 1000 docker && \
+    useradd -u 1000 -g docker -d /home/docker -s /bin/sh docker
 ENV SERVER_PORT=8080
 ENV ARTIFACT_NAME spring-boot.jar
 ARG JAR_FILE=/build/target/*.jar
 WORKDIR /tmp
-USER 1100
-COPY --chown=1100:1100 --from=maven_build  /build/target/*.jar /tmp/spring-boot.jar
+USER 1000:1000
+COPY --chown=1000:1000 --from=maven_build  /build/target/*.jar /tmp/spring-boot.jar
 EXPOSE $SERVER_PORT
 ENTRYPOINT ["java", "-jar", "/tmp/spring-boot.jar"]
