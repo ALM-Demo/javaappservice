@@ -1,7 +1,7 @@
 name: Destroy Azure Web App
 on:
   repository_dispatch:
-    types: delete_web_app
+    types: delete_functionapp_app
 jobs:
   delete-web-app:      
     runs-on: ubuntu-latest
