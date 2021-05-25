@@ -76,7 +76,7 @@ jobs:
         
     - name: Login to ACR
       run: |
-        az acr login --name $AZURE_ACR_NAME
+        az acr login --name $AZURE_ACR_REPO_NAME
     - name: Push Docker Images
       run: |
         docker push "$AZURE_ACR_REPO_NAME.azurecr.io/$AZURE_WEB_APP_IMAGE_NAME:$AZURE_WEB_APP_IMAGE_TAG"
