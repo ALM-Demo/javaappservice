@@ -56,12 +56,21 @@ jobs:
           ${{ env.STRATOSPHERE_API_URL }}/geographies/${{ env.GEOGRAPHY }}/projects/${{ env.PROJECT_NAME }}/resources/azure-container-registry/${{ env.AZURE_ACR_NAME1 }} > temp.json
         echo "AZURE_ACR_NAME=$(jq -r '.status.azure.resource_name' temp.json)" >> $GITHUB_ENV
         AZURE_ACR_STATUS=$(jq -r '.status.state' temp.json)
-        echo $AZURE_ACR_STATUS
         
     - name: out
       id: time
       run: |
         echo ${{ env.AZURE_ACR_NAME }}
+        echo ${{ env.AZURE_ACR_STATUS }}   
+        for ((i = 0; i < 12; i++))
+        do
+          if [ $AZURE_ACR_STATUS != "deployed" ];then
+            sleep 5
+            if [ $i == 11 ];then
+              exit 1
+            fi
+         fi
+        done
         
 
         
