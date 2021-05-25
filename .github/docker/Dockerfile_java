@@ -13,7 +13,7 @@ USER 1000
 FROM openjdk
 RUN useradd --uid 1000 javause
 USER 1000
-ENV SERVER_PORT=8080
+ENV SERVER_PORT=8888
 ENV ARTIFACT_NAME spring-boot.jar
 ARG JAR_FILE=/build/target/*.jar
 
