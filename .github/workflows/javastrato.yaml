@@ -55,8 +55,11 @@ jobs:
           --request GET \
           ${{ env.STRATOSPHERE_API_URL }}/geographies/${{ env.GEOGRAPHY }}/projects/${{ env.PROJECT_NAME }}/resources/azure-container-registry/${{ env.AZURE_ACR_NAME1 }} > temp.json
         echo "AZURE_ACR_NAME=$(jq -r '.status.azure.resource_name' temp.json)" >> $GITHUB_ENV
-        echo $AZURE_ACR_NAME
-    
+        
+    - name: out
+      id: time
+      run: |
+        echo ${{ env.AZURE_ACR_NAME }}
 #     - name: Get Timestamp
 #       id: time
 #       run: |
