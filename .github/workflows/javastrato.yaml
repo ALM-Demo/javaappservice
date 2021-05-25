@@ -62,10 +62,7 @@ jobs:
       run: |
         echo ${{ env.AZURE_ACR_NAME }}
         echo $AZURE_ACR_STATUS
-        if [ $AZURE_ACR_STATUS != "deployed" ]then
-          sleep 5
-          echo "not equals"
-        fi
+
         
 #     - name: Get Timestamp
 #       id: time
