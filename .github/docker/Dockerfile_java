@@ -5,7 +5,7 @@ COPY pom.xml /build/
 COPY src /build/src/
 WORKDIR /build/
 USER root
-RUN mvn package
+RUN mvn clean package
 RUN chmod 777 /build/target/*.jar
 USER 1000
 
