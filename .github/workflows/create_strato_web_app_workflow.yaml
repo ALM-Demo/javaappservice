@@ -49,8 +49,7 @@ jobs:
           -H "Content-Type: application/json" \
           -H "Authorization: Bearer ${{ secrets.ST_TOKEN }}" \
           --request GET \
-          ${{ env.STRATOSPHERE_API_URL }}/geographies/${{ env.GEOGRAPHY }}/projects/${{ env.PROJECT_NAME }}/resources/azure-container-registry/${{ env.AZURE_ACR_NAME1 }} > temp.json
-        echo "AZURE_ACR_NAME=$(jq -r '.status.azure.resource_name' temp.json)" >> $GITHUB_ENV
+          ${{ env.STRATOSPHERE_API_URL }}/geographies/${{ env.GEOGRAPHY }}/projects/${{ env.PROJECT_NAME }}/resources/azure-container-registry/${{ env.AZURE_ACR_NAME }} > temp.json
         echo "AZURE_ACR_STATUS=$(jq -r '.status.state' temp.json)" >> $GITHUB_ENV  
         for ((i = 0; i < 12; i++))
         do
@@ -77,7 +76,7 @@ jobs:
         
     - name: Login to ACR
       run: |
-        az acr login --name $AZURE_ACR_REPO_NAME
+        az acr login --name $AZURE_ACR_NAME
     - name: Push Docker Images
       run: |
         docker push "$AZURE_ACR_REPO_NAME.azurecr.io/$AZURE_WEB_APP_IMAGE_NAME:$AZURE_WEB_APP_IMAGE_TAG"
