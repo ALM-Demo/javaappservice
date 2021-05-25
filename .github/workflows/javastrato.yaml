@@ -64,7 +64,7 @@ jobs:
         echo $AZURE_ACR_STATUS
         if [ $AZURE_ACR_STATUS != "deployed" ]then
           sleep 5
-          print "not equals"
+          echo "not equals"
         fi
         
 #     - name: Get Timestamp
