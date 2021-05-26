@@ -18,7 +18,6 @@ jobs:
       STRATOSPHERE_API_URL: https://api.live.external.byp.ai
       PROJECT_NAME: "${{ github.event.client_payload.project_name }}"
       GEOGRAPHY: "${{ github.event.client_payload.geography }}"
-      OWNER_GROUP_NAME : "${{ github.event.client_payload.owner_groupname }}"
     steps:
     - name: Set env
       run: |
@@ -51,15 +50,15 @@ jobs:
           ${{ env.STRATOSPHERE_API_URL }}/geographies/${{ env.GEOGRAPHY }}/projects/${{ env.PROJECT_NAME }}/resources/azure-container-registry/${{ env.AZURE_ACR_NAME }} > temp.json
         echo "AZURE_ACR_REPO_NAME=$(jq -r '.status.azure.resource_name' temp.json)" >> $GITHUB_ENV
         echo "AZURE_ACR_STATUS=$(jq -r '.status.state' temp.json)" >> $GITHUB_ENV  
-        for ((i = 0; i < 12; i++))
-        do
-          if [ ${{ env.AZURE_ACR_STATUS }} != "deployed" ];then
-            sleep 5
-            if [ $i == 11 ];then
-              exit 1
-            fi
-         fi
-        done   
+        # for ((i = 0; i < 12; i++))
+        # do
+        #   if [ ${{ env.AZURE_ACR_STATUS }} != "deployed" ];then
+        #     sleep 5
+        #     if [ $i == 11 ];then
+        #       exit 1
+        #     fi
+        #  fi
+        # done   
    
     - name: Get Timestamp
       id: time
@@ -87,7 +86,7 @@ jobs:
           -H "Content-Type: application/json" \
           -H "Authorization: Bearer ${{ secrets.ST_TOKEN }}" \
           --request PUT \
-          --data '{"spec": {"liveness_probe": {"initial_delay_seconds": 120},"enabled": true,"image": '\"${{ env.AZURE_ACR_REPO_NAME }}.azurecr.io/${{ env.AZURE_WEB_APP_IMAGE_NAME }}:${{ env.AZURE_WEB_APP_IMAGE_TAG }}\"',"network": {"access": "external"},"authentication": {"enabled": true}}}' \
+          --data '{"spec": {"liveness_probe": {"initial_delay_seconds": 180,"path": "/"},"enabled": true,"image": '\"${{ env.AZURE_ACR_REPO_NAME }}.azurecr.io/${{ env.AZURE_WEB_APP_IMAGE_NAME }}:${{ env.AZURE_WEB_APP_IMAGE_TAG }}\"',"network": {"access": "external"},"authentication": {"enabled": true}}}' \
           ${{ env.STRATOSPHERE_API_URL }}/geographies/${{ env.GEOGRAPHY }}/projects/${{ env.PROJECT_NAME }}/resources/container-web/${{ env.AZURE_WEB_APP_NAME }}
 
         curl -H "accept: application/json" \
@@ -96,13 +95,13 @@ jobs:
           --request GET \
           ${{ env.STRATOSPHERE_API_URL }}/geographies/${{ env.GEOGRAPHY }}/projects/${{ env.PROJECT_NAME }}/resources/container-web/${{ env.AZURE_WEB_APP_NAME }} > temp.json
         echo "AZURE_WEBAPP_STATUS=$(jq -r '.status.state' temp.json)" >> $GITHUB_ENV  
-        for ((i = 0; i < 60; i++))
-        do
-          if [ ${{ env.AZURE_WEBAPP_STATUS }} != "deployed" ];then
-            sleep 5
-            if [ $i == 59 ];then
-              exit 1
-            fi
-         fi
-        done
+        # for ((i = 0; i < 60; i++))
+        # do
+        #   if [ ${{ env.AZURE_WEBAPP_STATUS }} != "deployed" ];then
+        #     sleep 5
+        #     if [ $i == 59 ];then
+        #       exit 1
+        #     fi
+        #  fi
+        # done
         
