@@ -45,6 +45,7 @@ jobs:
           --request GET \
           ${{ env.STRATOSPHERE_API_URL }}/geographies/${{ env.GEOGRAPHY }}/projects/${{ env.PROJECT_NAME }}/resources/container-web/${{ env.AZURE_WEB_APP_NAME }} > temp.json
         echo "CONTAINER_WEB_ENDPOINT_URL=$(jq -r '.links.endpoint.url' temp.json)" >> $GITHUB_ENV
+        echo "AZURE_WEBAPP_STATUS=$(jq -r '.status.state' temp.json)" >> $GITHUB_ENV
     - name: out URL
       run: |
         echo $AZURE_WEBAPP_STATUS
