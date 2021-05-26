@@ -43,3 +43,4 @@ jobs:
           ${{ env.STRATOSPHERE_API_URL }}/geographies/${{ env.GEOGRAPHY }}/projects/${{ env.PROJECT_NAME }}/resources/container-web/${{ env.AZURE_WEB_APP_NAME }} > temp.json
         echo "AZURE_ENDPOINT_URL=$(jq -r '.links.endpoint.url' temp.json)" >> $GITHUB_ENV
         echo ${{ env.AZURE_ENDPOINT_URL }}
+        echo $AZURE_ENDPOINT_URL
