@@ -45,4 +45,7 @@ jobs:
         jq -r '.links.endpoint.url' temp.json
         echo ${{ env.AZURE_ENDPOINT_URL }}
         echo $AZURE_ENDPOINT_URL
-        cat temp.json
+    - name: out URL
+      run: |
+        echo $AZURE_ENDPOINT_URL
+        
