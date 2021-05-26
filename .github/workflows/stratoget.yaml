@@ -7,7 +7,7 @@ jobs:
   create-web-app:      
     runs-on: ubuntu-latest
     env:
-      GITHUB_REPO_NAME: 'java'
+      GITHUB_REPO_NAME: 'reactstrato'
       AZURE_SUBSCRIPTION: ''
       AZURE_RESOURCE_GROUP: ''
       AZURE_DEPLOY_ENVIRONMENT: 'dev'
@@ -36,7 +36,7 @@ jobs:
     
     - name: Get URL
       run: |
-                curl -H "accept: application/json" \
+        curl -H "accept: application/json" \
           -H "Content-Type: application/json" \
           -H "Authorization: Bearer ${{ secrets.ST_TOKEN }}" \
           --request GET \
