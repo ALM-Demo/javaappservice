@@ -50,6 +50,7 @@ jobs:
       run: |
         echo $AZURE_WEBAPP_STATUS
         echo "AZURE_WEBAPP_STATUS=$(jq -r '.status.state' temp.json)" >> $GITHUB_ENV
+        for ((i = 0; i < 60; i++))
         do
           if [ ${{ env.AZURE_WEBAPP_STATUS }} != "deployed" ];then
             sleep 5
