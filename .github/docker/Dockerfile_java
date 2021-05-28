@@ -13,15 +13,14 @@ USER 1000
 FROM openjdk
 RUN useradd --uid 1000 javause
 USER 1000
-ENV SERVER_PORT=8888
-ENV PORT=8888
+ENV PORT 8080
 ENV ARTIFACT_NAME spring-boot.jar
 ARG JAR_FILE=/build/target/*.jar
 
 WORKDIR /app
 
 COPY --chown=1000 --from=maven_build  /build/target/*.jar /app/spring-boot.jar
-EXPOSE $SERVER_PORT
+
 EXPOSE $PORT
 USER 1000
 
