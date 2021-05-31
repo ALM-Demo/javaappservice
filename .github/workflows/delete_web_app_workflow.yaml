@@ -5,6 +5,7 @@ on:
 jobs:
   delete-web-app:      
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     env:
       AZURE_WEB_APP_NAME: "${{ github.event.client_payload.webapp_name }}"
       AZURE_RESOURCE_GROUP: "${{ github.event.client_payload.resource_group }}"
